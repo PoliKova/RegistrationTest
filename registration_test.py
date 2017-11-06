@@ -1,6 +1,5 @@
 import unittest
 from selenium import webdriver
-#from selenium.webdriver.common.keys import Keys
 from ddt import ddt, data
 
 
@@ -18,7 +17,6 @@ class RegistrationTest(unittest.TestCase):
           ["Kate", "Bobkova", 1, "675432", "cat", "", "qwerty11", "qwerty11"],
           ["Kate", "Bobkova", 1, "123658778067", "cat", "av@mail.ru", "", "qwerty11"],
           ["Kate", "Bobkova", 1, "111111111", "cat", "av@mail.ru", "qwerty11", ""],
-          ["Alla", "Ionova", 3, "757832", "dog12", "allla123@yandex.r", "", ""],
           ["", "", 0, "", "", "", "", ""])
     def test_at_least_one_required_field_is_empty(self, value):
         list_id_elements = ["name_3_firstname", "name_3_lastname", "hobby", "phone_9",
@@ -41,7 +39,7 @@ class RegistrationTest(unittest.TestCase):
                 break
         self.assertTrue(required_field_is_empty)
 
-    @data(["qwerty11","qwerty22"], ["qwerty11",""])
+    @data(["qwerty11","qwerty22"], ["qwerty11","1"])
     def test_passwords_match(self, value):
         password_field = self.driver.find_element_by_id("password_2")
         password_confirm_field = self.driver.find_element_by_id("confirm_password_password_2")
@@ -51,8 +49,8 @@ class RegistrationTest(unittest.TestCase):
         submit_btn.submit()
         try:
             field=self.driver.find_element_by_xpath("//*[@id='pie_register']/li[12]/div/div/span")
-            self.assertTrue(True)
-        except NoSuchElementException:
+            self.assertEqual("* Fields do not match", field.text)
+        except:
             self.assertTrue(False)
 
     def tearDown(self):
